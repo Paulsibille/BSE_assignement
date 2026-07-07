@@ -32,20 +32,38 @@ def compute_value_premium(
     n_portfolios=5,
     exchanges=["NYSE", "NASDAQ", "AMEX"],
     value_weighted=True,
+    dependent_sort=False,
     sorting_variables=None,
     returns=None,
 ):
-    # assign B/M portfolios on the annual cross-section, then stack the groups
-
-    # Here for the assignement we should have independant sorting vs dependant sorting, so it has something to do with parralelization.
-    assigned = pl.concat(
-        [
-            group.with_columns(
-                portfolio=assign_portfolio(group, exchanges, "bm", n_portfolios)
+    if dependent_sort:
+        groups = []
+        for _, group in sorting_variables.group_by("sorting_date"):
+            group = group.with_columns(
+                portfolio_me=assign_portfolio(group, exchanges, "me", 3)
             )
-            for _, group in sorting_variables.group_by("sorting_date")
-        ]
-    )
+            groups.append(
+                pl.concat(
+                    [
+                        subgroup.with_columns(
+                            portfolio=assign_portfolio(
+                                subgroup, exchanges, "bm", n_portfolios
+                            )
+                        )
+                        for _, subgroup in group.group_by("portfolio_me")
+                    ]
+                )
+            )
+        assigned = pl.concat(groups).drop("portfolio_me")
+    else:
+        assigned = pl.concat(
+            [
+                group.with_columns(
+                    portfolio=assign_portfolio(group, exchanges, "bm", n_portfolios)
+                )
+                for _, group in sorting_variables.group_by("sorting_date")
+            ]
+        )
 
     value_premium = (
         assigned
@@ -102,6 +120,7 @@ def compute_value_premium(
 n_portfolios = [2, 5, 10]
 exchanges = [["NYSE"], ["NYSE", "NASDAQ", "AMEX"]]
 value_weighted = [True, False]
+dependent_sorts = [True, False]
 samples = [
     sorting_variables,
     sorting_variables.filter(pl.col("industry") != "Finance"),
@@ -109,14 +128,16 @@ samples = [
     sorting_variables.filter(pl.col("sorting_date") >= pl.date(1990, 7, 1)),
 ]
 
-# build the full Cartesian product of options (3 × 2 × 2 × 4 = 48)
-p_hacking_setup = list(product(n_portfolios, exchanges, value_weighted, samples))
+# build the full Cartesian product of options (3 × 2 × 2 × 2 × 4 = 96)
+p_hacking_setup = list(
+    product(n_portfolios, exchanges, value_weighted, dependent_sorts, samples)
+)
 
 n_cores = cpu_count() - 1
 p_hacking_results = pl.concat(
     Parallel(n_jobs=n_cores)(
-        delayed(compute_value_premium)(x, y, z, sv, portfolios_returns)
-        for x, y, z, sv in p_hacking_setup
+        delayed(compute_value_premium)(x, y, z, d, sv, portfolios_returns)
+        for x, y, z, d, sv in p_hacking_setup
     )
 )
 p_hacking_results.write_csv("results/tables/p_hacking_results.csv")
@@ -136,7 +157,7 @@ fig_p_hacking_nw = (
         x="Value premium",
         y="Count",
         fill="Significant at 95%?",
-        title="Value premiums across 48 specifications",
+        title="Value premiums across 96 specifications",
     )
 )
 fig_p_hacking_nw.save("results/figures/p_hacking_nw.png", width=8, height=6, dpi=300)
@@ -162,7 +183,7 @@ fig_p_hacking_capm = (
         x="Premium",
         y="Count",
         fill="Significant at 95%?",
-        title="CAPM-alphas of the value factor across 48 specifications",
+        title="CAPM-alphas of the value factor across 96 specifications",
     )
 )
 fig_p_hacking_capm.save(
