@@ -1,10 +1,9 @@
 ---
-title: "Replicating the Value Factor"
-author: Paul Sibille
+title: "Replicating the Value Factor - Paul Sibille"
 cache: false
 ---
 
-This document replicates the value factor of the Fama-French five-factor model and then asks how fragile the resulting value premium is. I first rebuild the data pipeline from class, then construct the HML factor under the standard timing convention using both independent and dependent sorts, and finally recompute the premium across a grid of 96 plausible specifications to gauge the non-standard errors around the point estimate.
+This document replicates the value factor of the Fama-French five-factor model and then asks how fragile the resulting value premium is. I first rebuild the data pipeline from class, then construct the HML factor under the standard timing convention using both independent and dependent sorts, and finally recompute the premium across a grid of 96 plausible specifications to evaluate the non-standard errors around the estimate.
 
 We use the following packages throughout the document:
 
@@ -47,7 +46,7 @@ compustat = pl.read_parquet("data/clean/compustat_annual.parquet")
 
 ## 2. Value Factor Replication
 
-We follow the Fama-French timing convention: size is the market capitalization from June, and book-to-market divides book equity from the fiscal year ending in calendar year $t-1$ by the market equity of December $t-1$. Both sorting variables are assigned to a `sorting_date` of July 1st in year $t$, so each annual sort governs the portfolio returns from July of year $t$ to June of year $t+1$.
+We follow the Fama-French timing convention: size is the market capitalization from June of year $t$, and book-to-market divides book equity from the fiscal year $t-1$ by the market equity of end of year $t-1$. Portfolios are formed in June of year $t$, while the first return is used in July of year $t$.
 
 ```{python}
 #| label: value-factor-sorting-variables
@@ -86,7 +85,7 @@ portfolios_returns = crsp_monthly.with_columns(
 ).select(["permno", "sorting_date", "date", "ret_excess", "mktcap_lag"])
 ```
 
-For the replication itself, we assign stocks into terciles with a simple quantile-based helper and compute value-weighted portfolio returns. In the independent sort, size and book-to-market portfolios are formed separately on the full cross-section. In the dependent sort, stocks are first sorted into size terciles and the book-to-market sort then happens within each size bucket. In both cases, the value premium is the return of the high book-to-market portfolios minus the low ones, averaged across size buckets.
+For the replication itself, we assign stocks into terciles and compute value-weighted portfolio returns. In the independent sort, size and book-to-market portfolios are formed separately on the full cross-section. In the dependent sort, stocks are first sorted into size terciles and the book-to-market sort then happens within each size bucket. In both cases, the value premium is the return of the high book-to-market portfolios minus the low ones.
 
 ```{python}
 #| label: value-factor-independent-sort
@@ -191,11 +190,11 @@ comparison_value_premium.write_csv("results/tables/value_premium_comparison.csv"
 comparison_value_premium
 ```
 
-Both designs deliver a positive monthly value premium of about 0.42 percent, slightly above the published HML average of about 0.30 percent. The gap is expected since we work with synthetic data and a simplified construction, but the replication clearly captures the sign and magnitude of the published factor. Independent and dependent sorts barely differ here.
+Both designs deliver a positive monthly value premium of about 0.42 percent, slightly above the published HML average of about 0.30 percent. The gap is expected since we work with synthetic data, but the replication clearly captures the sign and magnitude of the published factor. Independent and dependent sorts show quite similar monthly value premium.
 
 ## 3. Non-Standard Errors
 
-We now take the specification grid from the p-hacking hands-on and extend it with one dimension not covered in class: independent versus dependent sorts. The `compute_value_premium()` function below takes a `dependent_sort` argument. When it is `True`, stocks are first sorted into three size buckets using the chosen exchange breakpoints, and the book-to-market sort happens within each bucket; when it is `False`, the sort uses the full cross-section as in class. For each specification, the function returns the average premium with a Newey-West t-statistic and, in addition, its CAPM-alpha.
+We now take the specification grid from the p-hacking hands-on and extend it with one dimension not covered in class: independent versus dependent sorts. The `compute_value_premium()` function below takes a `dependent_sort` argument. When it is `True`, stocks are first sorted into three size buckets using the chosen exchange breakpoints, and the book-to-market sort happens within each bucket. On the other hand, when it is `False`, the sort uses the full cross-section as in class. For each specification, We return the average premium with a Newey-West t-statistic and, in addition, its CAPM-alpha.
 
 ```{python}
 #| label: non-standard-errors-functions
@@ -375,7 +374,7 @@ fig_p_hacking_nw = (
 fig_p_hacking_nw.show()
 ```
 
-As an optional addition, @fig-nse-capm repeats the exercise with the CAPM-alphas of each specification, using the CAPM-alpha of the published HML factor as the reference line.
+In addition, @fig-nse-capm repeats the exercise with the CAPM-alphas of each specification, using the CAPM-alpha of the published HML factor as the reference line.
 
 ```{python}
 #| label: fig-nse-capm
@@ -409,6 +408,6 @@ fig_p_hacking_capm.show()
 
 ## 4. Discussion
 
-In the first section, I rebuilt the class pipeline: the published FF5 factors come from `tf.download_data()` and are saved in a tidied, date-restricted version, while the synthetic CRSP and Compustat data are read from the cleaned files produced in the tutorials. In the second section, I applied the Fama-French timing convention to build the sorting variables, mapped monthly returns to the July-to-June period each sort governs, and computed the value premium under independent and dependent sorts. Both come out around 0.42 percent per month, close to the published HML average of 0.30 percent. In the third section, I extended the p-hacking grid with the independent versus dependent sorting choice and recomputed the premium across all 96 specifications.
+In the first section, I rebuilt the class pipeline: the published FF5 factors come from `tf.download_data()` and are saved in a tidied, date-restricted version, while the synthetic CRSP and Compustat data are read from the cleaned files produced in the tutorials. In the second section, I applied the Fama-French timing convention to build the sorting variables, and computed the value premium under independent and dependent sorts. Both come out around 0.42 percent per month, close to the published HML average of 0.30 percent. In the third section, I extended the p-hacking grid with the independent versus dependent sorting choice and recomputed the premium across all 96 specifications.
 
-The distribution of estimates makes the main point of the exercise. The premium is positive in essentially every specification, but its magnitude varies substantially with choices that are all defensible ex ante, and only about three quarters of the specifications are significant at the 95 percent level. A single point estimate of the value premium therefore hides a lot of researcher degrees of freedom: two careful researchers using the same data could report noticeably different premiums, or disagree on its significance, simply because of design choices. The value premium looks like a real feature of the data, but any specific number for it should be read with the whole distribution in mind.
+The distribution of estimates implied by the number of methodological decision one can make, concludes our analysis. The premium is positive in essentially every specification, but its magnitude varies substantially across methodological choices, and only about three quarters of the specifications are significant at the 95 percent level. A single point estimate of the value premium therefore hides a lot of researcher degrees of freedom: two careful researchers using the same data could report noticeably different premiums, or disagree on its significance, simply because of different methodological choices. As mentioned in class, displaying a similar histogram in the literature each time a new factor is reported could help editors, reviewers, and the broader scientific community better assess the robustness of the presented results. I believe that researchers, even in entirely different fields, face numerous methodological choices. Such a framework could therefore be applied not only to asset pricing but also to any other field characterized by substantial methodological heterogeneity.

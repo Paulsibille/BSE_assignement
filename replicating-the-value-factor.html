@@ -1,149 +1,246 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
-<meta name="author" content="Paul Sibille">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<title>Replicating the Value Factor</title>
-<style>
-/* Default styles provided by pandoc.
+  <meta name="author" content="Paul Sibille">
+
+  <title>Replicating the Value Factor</title>
+  <style>
+    /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-</style>
+    code {
+      white-space: pre-wrap;
+    }
+
+    span.smallcaps {
+      font-variant: small-caps;
+    }
+
+    div.columns {
+      display: flex;
+      gap: min(4vw, 1.5em);
+    }
+
+    div.column {
+      flex: auto;
+      overflow-x: auto;
+    }
+
+    div.hanging-indent {
+      margin-left: 1.5em;
+      text-indent: -1.5em;
+    }
+
+    ul.task-list {
+      list-style: none;
+    }
+
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em;
+      /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      vertical-align: middle;
+    }
+
+    /* CSS for syntax highlighting */
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    pre>code.sourceCode {
+      white-space: pre;
+      position: relative;
+    }
+
+    pre>code.sourceCode>span {
+      display: inline-block;
+      line-height: 1.25;
+    }
+
+    pre>code.sourceCode>span:empty {
+      height: 1.2em;
+    }
+
+    .sourceCode {
+      overflow: visible;
+    }
+
+    code.sourceCode>span {
+      color: inherit;
+      text-decoration: inherit;
+    }
+
+    div.sourceCode {
+      margin: 1em 0;
+    }
+
+    pre.sourceCode {
+      margin: 0;
+    }
+
+    @media screen {
+      div.sourceCode {
+        overflow: auto;
+      }
+    }
+
+    @media print {
+      pre>code.sourceCode {
+        white-space: pre-wrap;
+      }
+
+      pre>code.sourceCode>span {
+        text-indent: -5em;
+        padding-left: 5em;
+      }
+    }
+
+    pre.numberSource code {
+      counter-reset: source-line 0;
+    }
+
+    pre.numberSource code>span {
+      position: relative;
+      left: -4em;
+      counter-increment: source-line;
+    }
+
+    pre.numberSource code>span>a:first-child::before {
+      content: counter(source-line);
+      position: relative;
+      left: -1em;
+      text-align: right;
+      vertical-align: baseline;
+      border: none;
+      display: inline-block;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      padding: 0 4px;
+      width: 4em;
+    }
+
+    pre.numberSource {
+      margin-left: 3em;
+      padding-left: 4px;
+    }
+
+    div.sourceCode {}
+
+    @media screen {
+      pre>code.sourceCode>span>a:first-child::before {
+        text-decoration: underline;
+      }
+    }
+  </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="replicating-the-value-factor_files/libs/clipboard/clipboard.min.js"></script>
-<script src="replicating-the-value-factor_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="replicating-the-value-factor_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="replicating-the-value-factor_files/libs/quarto-html/popper.min.js"></script>
-<script src="replicating-the-value-factor_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="replicating-the-value-factor_files/libs/quarto-html/anchor.min.js"></script>
-<link href="replicating-the-value-factor_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="replicating-the-value-factor_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="replicating-the-value-factor_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="replicating-the-value-factor_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="replicating-the-value-factor_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
+    integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"
+    crossorigin="anonymous"></script>
+  <script src="replicating-the-value-factor_files/libs/clipboard/clipboard.min.js"></script>
+  <script src="replicating-the-value-factor_files/libs/quarto-html/quarto.js" type="module"></script>
+  <script src="replicating-the-value-factor_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+  <script src="replicating-the-value-factor_files/libs/quarto-html/popper.min.js"></script>
+  <script src="replicating-the-value-factor_files/libs/quarto-html/tippy.umd.min.js"></script>
+  <script src="replicating-the-value-factor_files/libs/quarto-html/anchor.min.js"></script>
+  <link href="replicating-the-value-factor_files/libs/quarto-html/tippy.css" rel="stylesheet">
+  <link
+    href="replicating-the-value-factor_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css"
+    rel="stylesheet" id="quarto-text-highlighting-styles">
+  <script src="replicating-the-value-factor_files/libs/bootstrap/bootstrap.min.js"></script>
+  <link href="replicating-the-value-factor_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+  <link href="replicating-the-value-factor_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css"
+    rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js"
+    integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx"
+    crossorigin="anonymous"></script>
 
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+  <script type="application/javascript">define('jquery', [], function () { return window.jQuery; })</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
+  <script type="text/javascript">
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
       }
     }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
+    window.Quarto = {
+      typesetMath
+    };
+  </script>
 
 </head>
 
 <body class="fullcontent quarto-light">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+  <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
-<main class="content" id="quarto-document-content">
+    <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Replicating the Value Factor</h1>
-</div>
+      <header id="title-block-header" class="quarto-title-block default">
+        <div class="quarto-title">
+          <h1 class="title">Replicating the Value Factor</h1>
+        </div>
 
 
 
-<div class="quarto-title-meta">
+        <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Paul Sibille </p>
+          <div>
+            <div class="quarto-title-meta-heading">Author</div>
+            <div class="quarto-title-meta-contents">
+              <p>Paul Sibille </p>
+            </div>
           </div>
-  </div>
-    
-  
-    
-  </div>
-  
 
 
-</header>
+
+        </div>
 
 
-<p>This document replicates the value factor of the Fama-French five-factor model and then asks how fragile the resulting value premium is. I first rebuild the data pipeline from class, then construct the HML factor under the standard timing convention using both independent and dependent sorts, and finally recompute the premium across a grid of 96 plausible specifications to gauge the non-standard errors around the point estimate.</p>
-<p>We use the following packages throughout the document:</p>
-<div id="value-factor-packages" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+
+      </header>
+
+
+      <p>This document replicates the value factor of the Fama-French five-factor model and then asks how fragile the
+        resulting value premium is. I first rebuild the data pipeline from class, then construct the HML factor under
+        the standard timing convention using both independent and dependent sorts, and finally recompute the premium
+        across a grid of 96 plausible specifications to gauge the non-standard errors around the point estimate.</p>
+      <p>We use the following packages throughout the document:</p>
+      <div id="value-factor-packages" class="cell" data-execution_count="1">
+        <div class="code-copy-outer-scaffold">
+          <div class="sourceCode cell-code" id="cb1">
+            <pre
+              class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tidyfinance <span class="im">as</span> tf</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyfixest <span class="im">as</span> pf</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -151,13 +248,20 @@ window.Quarto = {
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> Parallel, delayed, cpu_count</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_histogram, geom_vline, labs</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>tf.set_backend(<span class="st">"polars"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<section id="data-preparation" class="level2">
-<h2 class="anchored" data-anchor-id="data-preparation">1. Data Preparation</h2>
-<p>We download the published Fama/French 5 Factors (2x3) with <code>tf.download_data()</code>, keep a raw copy, and save a tidied version restricted to 1970-2025 for the analysis. The synthetic CRSP and Compustat data are loaded from the cleaned parquet files given in class.</p>
-<div id="value-factor-prepare-data" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>factors_ff5_monthly_raw <span class="op">=</span> tf.download_data(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>tf.set_backend(<span class="st">"polars"</span>)</span></code></pre>
+          </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+        </div>
+      </div>
+      <section id="data-preparation" class="level2">
+        <h2 class="anchored" data-anchor-id="data-preparation">1. Data Preparation</h2>
+        <p>We download the published Fama/French 5 Factors (2x3) with <code>tf.download_data()</code>, keep a raw copy,
+          and save a tidied version restricted to 1970-2025 for the analysis. The synthetic CRSP and Compustat data are
+          loaded from the cleaned parquet files given in class.</p>
+        <div id="value-factor-prepare-data" class="cell" data-execution_count="2">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb2">
+              <pre
+                class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>factors_ff5_monthly_raw <span class="op">=</span> tf.download_data(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    domain<span class="op">=</span><span class="st">"Fama-French"</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    dataset<span class="op">=</span><span class="st">"Fama/French 5 Factors (2x3)"</span>,</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -172,17 +276,27 @@ window.Quarto = {
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>crsp_monthly <span class="op">=</span> pl.read_parquet(<span class="st">"data/clean/crsp_monthly.parquet"</span>)</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>compustat <span class="op">=</span> pl.read_parquet(<span class="st">"data/clean/compustat_annual.parquet"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>No start_date or end_date provided. Returning the full dataset.</code></pre>
-</div>
-</div>
-</section>
-<section id="value-factor-replication" class="level2">
-<h2 class="anchored" data-anchor-id="value-factor-replication">2. Value Factor Replication</h2>
-<p>We follow the Fama-French timing convention: size is the market capitalization from June, and book-to-market divides book equity from the fiscal year ending in calendar year <span class="math inline">\(t-1\)</span> by the market equity of December <span class="math inline">\(t-1\)</span>. Both sorting variables are assigned to a <code>sorting_date</code> of July 1st in year <span class="math inline">\(t\)</span>, so each annual sort governs the portfolio returns from July of year <span class="math inline">\(t\)</span> to June of year <span class="math inline">\(t+1\)</span>.</p>
-<div id="value-factor-sorting-variables" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> (</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>compustat <span class="op">=</span> pl.read_parquet(<span class="st">"data/clean/compustat_annual.parquet"</span>)</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+          <div class="cell-output cell-output-stdout">
+            <pre><code>No start_date or end_date provided. Returning the full dataset.</code></pre>
+          </div>
+        </div>
+      </section>
+      <section id="value-factor-replication" class="level2">
+        <h2 class="anchored" data-anchor-id="value-factor-replication">2. Value Factor Replication</h2>
+        <p>We follow the Fama-French timing convention: size is the market capitalization from June, and book-to-market
+          divides book equity from the fiscal year ending in calendar year <span class="math inline">\(t-1\)</span> by
+          the market equity of December <span class="math inline">\(t-1\)</span>. Both sorting variables are assigned to
+          a <code>sorting_date</code> of July 1st in year <span class="math inline">\(t\)</span>, so each annual sort
+          governs the portfolio returns from July of year <span class="math inline">\(t\)</span> to June of year <span
+            class="math inline">\(t+1\)</span>.</p>
+        <div id="value-factor-sorting-variables" class="cell" data-execution_count="3">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb4">
+              <pre
+                class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> (</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    crsp_monthly.<span class="bu">filter</span>(pl.col(<span class="st">"date"</span>).dt.month() <span class="op">==</span> <span class="dv">6</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    .with_columns(sorting_date<span class="op">=</span>pl.col(<span class="st">"date"</span>).dt.offset_by(<span class="st">"1mo"</span>))</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    .select([<span class="st">"permno"</span>, <span class="st">"exchange"</span>, <span class="st">"industry"</span>, <span class="st">"sorting_date"</span>, <span class="st">"mktcap"</span>])</span>
@@ -214,11 +328,19 @@ window.Quarto = {
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    sorting_date<span class="op">=</span>pl.when(pl.col(<span class="st">"date"</span>).dt.month() <span class="op">&gt;=</span> <span class="dv">7</span>)</span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    .then(pl.date(pl.col(<span class="st">"date"</span>).dt.year(), <span class="dv">7</span>, <span class="dv">1</span>))</span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    .otherwise(pl.date(pl.col(<span class="st">"date"</span>).dt.year() <span class="op">-</span> <span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">1</span>))</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>).select([<span class="st">"permno"</span>, <span class="st">"sorting_date"</span>, <span class="st">"date"</span>, <span class="st">"ret_excess"</span>, <span class="st">"mktcap_lag"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>For the replication itself, we assign stocks into terciles with a simple quantile-based helper and compute value-weighted portfolio returns. In the independent sort, size and book-to-market portfolios are formed separately on the full cross-section. In the dependent sort, stocks are first sorted into size terciles and the book-to-market sort then happens within each size bucket. In both cases, the value premium is the return of the high book-to-market portfolios minus the low ones, averaged across size buckets.</p>
-<div id="value-factor-independent-sort" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assign_portfolio(sorting_variable, n_portfolios):</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>).select([<span class="st">"permno"</span>, <span class="st">"sorting_date"</span>, <span class="st">"date"</span>, <span class="st">"ret_excess"</span>, <span class="st">"mktcap_lag"</span>])</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+        </div>
+        <p>For the replication itself, we assign stocks into terciles with a simple quantile-based helper and compute
+          value-weighted portfolio returns. In the independent sort, size and book-to-market portfolios are formed
+          separately on the full cross-section. In the dependent sort, stocks are first sorted into size terciles and
+          the book-to-market sort then happens within each size bucket. In both cases, the value premium is the return
+          of the high book-to-market portfolios minus the low ones, averaged across size buckets.</p>
+        <div id="value-factor-independent-sort" class="cell" data-execution_count="4">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb5">
+              <pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assign_portfolio(sorting_variable, n_portfolios):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Assign each stock to a portfolio bin between breakpoints."""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pl.col(sorting_variable).qcut(</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        n_portfolios,</span>
@@ -257,10 +379,14 @@ window.Quarto = {
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        )</span>
 <span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    .select(pl.col(<span class="st">"value_premium"</span>).mean())</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="value-factor-dependent-sort" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>value_portfolios_dep <span class="op">=</span> (</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+        </div>
+        <div id="value-factor-dependent-sort" class="cell" data-execution_count="5">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb6">
+              <pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>value_portfolios_dep <span class="op">=</span> (</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    sorting_variables.with_columns(</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        portfolio_me<span class="op">=</span>assign_portfolio(<span class="st">"me"</span>, n_portfolios<span class="op">=</span><span class="dv">3</span>).over(<span class="st">"sorting_date"</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    )</span>
@@ -293,11 +419,15 @@ window.Quarto = {
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        )</span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    .select(pl.col(<span class="st">"value_premium"</span>).mean())</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>The table below compares both replicated premiums to the published HML factor:</p>
-<div id="cell-value-factor-comparison" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hml_published <span class="op">=</span> factors_ff5_monthly[<span class="st">"hml"</span>].mean()</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>)</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+        </div>
+        <p>The table below compares both replicated premiums to the published HML factor:</p>
+        <div id="cell-value-factor-comparison" class="cell" data-execution_count="6">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb7">
+              <pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hml_published <span class="op">=</span> factors_ff5_monthly[<span class="st">"hml"</span>].mean()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>comparison_value_premium <span class="op">=</span> pl.DataFrame(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    {</span>
@@ -311,52 +441,65 @@ window.Quarto = {
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>comparison_value_premium.write_csv(<span class="st">"results/tables/value_premium_comparison.csv"</span>)</span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>comparison_value_premium</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="value-factor-comparison" class="cell-output cell-output-display" data-execution_count="6">
-<div><style>
-.dataframe > thead > tr,
-.dataframe > tbody > tr {
-  text-align: right;
-  white-space: pre-wrap;
-}
-</style>
-<small>shape: (3, 2)</small>
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th">design</th>
-<th data-quarto-table-cell-role="th">value_premium</th>
-</tr>
-<tr class="even">
-<td>str</td>
-<td>f64</td>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>"Independent"</td>
-<td>0.004222</td>
-</tr>
-<tr class="even">
-<td>"Dependent"</td>
-<td>0.004239</td>
-</tr>
-<tr class="odd">
-<td>"Published HML"</td>
-<td>0.00298</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<p>Both designs deliver a positive monthly value premium of about 0.42 percent, slightly above the published HML average of about 0.30 percent. The gap is expected since we work with synthetic data and a simplified construction, but the replication clearly captures the sign and magnitude of the published factor. Independent and dependent sorts barely differ here.</p>
-</section>
-<section id="non-standard-errors" class="level2">
-<h2 class="anchored" data-anchor-id="non-standard-errors">3. Non-Standard Errors</h2>
-<p>We now take the specification grid from the p-hacking hands-on and extend it with one dimension not covered in class: independent versus dependent sorts. The <code>compute_value_premium()</code> function below takes a <code>dependent_sort</code> argument. When it is <code>True</code>, stocks are first sorted into three size buckets using the chosen exchange breakpoints, and the book-to-market sort happens within each bucket; when it is <code>False</code>, the sort uses the full cross-section as in class. For each specification, the function returns the average premium with a Newey-West t-statistic and, in addition, its CAPM-alpha.</p>
-<div id="non-standard-errors-functions" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assign_portfolio(data, exchanges, sorting_variable, n_portfolios):</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>comparison_value_premium</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+          <div id="value-factor-comparison" class="cell-output cell-output-display" data-execution_count="6">
+            <div>
+              <style>
+                .dataframe>thead>tr,
+                .dataframe>tbody>tr {
+                  text-align: right;
+                  white-space: pre-wrap;
+                }
+              </style>
+              <small>shape: (3, 2)</small>
+              <table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+                <thead>
+                  <tr class="header">
+                    <th data-quarto-table-cell-role="th">design</th>
+                    <th data-quarto-table-cell-role="th">value_premium</th>
+                  </tr>
+                  <tr class="even">
+                    <td>str</td>
+                    <td>f64</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="odd">
+                    <td>"Independent"</td>
+                    <td>0.004222</td>
+                  </tr>
+                  <tr class="even">
+                    <td>"Dependent"</td>
+                    <td>0.004239</td>
+                  </tr>
+                  <tr class="odd">
+                    <td>"Published HML"</td>
+                    <td>0.00298</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <p>Both designs deliver a positive monthly value premium of about 0.42 percent, slightly above the published HML
+          average of about 0.30 percent. The gap is expected since we work with synthetic data and a simplified
+          construction, but the replication clearly captures the sign and magnitude of the published factor. Independent
+          and dependent sorts barely differ here.</p>
+      </section>
+      <section id="non-standard-errors" class="level2">
+        <h2 class="anchored" data-anchor-id="non-standard-errors">3. Non-Standard Errors</h2>
+        <p>We now take the specification grid from the p-hacking hands-on and extend it with one dimension not covered
+          in class: independent versus dependent sorts. The <code>compute_value_premium()</code> function below takes a
+          <code>dependent_sort</code> argument. When it is <code>True</code>, stocks are first sorted into three size
+          buckets using the chosen exchange breakpoints, and the book-to-market sort happens within each bucket; when it
+          is <code>False</code>, the sort uses the full cross-section as in class. For each specification, the function
+          returns the average premium with a Newey-West t-statistic and, in addition, its CAPM-alpha.</p>
+        <div id="non-standard-errors-functions" class="cell" data-execution_count="7">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb8">
+              <pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assign_portfolio(data, exchanges, sorting_variable, n_portfolios):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Assign portfolios using breakpoints from the chosen exchanges."""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    quantiles <span class="op">=</span> [i <span class="op">/</span> n_portfolios <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_portfolios <span class="op">+</span> <span class="dv">1</span>)]</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    subset <span class="op">=</span> data.<span class="bu">filter</span>(pl.col(<span class="st">"exchange"</span>).is_in(exchanges))</span>
@@ -474,11 +617,18 @@ window.Quarto = {
 <span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>                capm.loc[<span class="st">"Intercept"</span>, <span class="st">"t value"</span>],</span>
 <span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>            ],</span>
 <span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>The extended grid varies the number of book-to-market portfolios, the exchanges used for breakpoints, value- versus equal-weighting, the sample filters, and the new sorting dimension, which yields 96 specifications in total. We evaluate all of them in parallel.</p>
-<div id="non-standard-errors-grid" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n_portfolios <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>]</span>
+<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+        </div>
+        <p>The extended grid varies the number of book-to-market portfolios, the exchanges used for breakpoints, value-
+          versus equal-weighting, the sample filters, and the new sorting dimension, which yields 96 specifications in
+          total. We evaluate all of them in parallel.</p>
+        <div id="non-standard-errors-grid" class="cell" data-execution_count="8">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb9">
+              <pre
+                class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n_portfolios <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>]</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>exchanges <span class="op">=</span> [[<span class="st">"NYSE"</span>], [<span class="st">"NYSE"</span>, <span class="st">"NASDAQ"</span>, <span class="st">"AMEX"</span>]]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>value_weighted <span class="op">=</span> [<span class="va">True</span>, <span class="va">False</span>]</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>dependent_sorts <span class="op">=</span> [<span class="va">True</span>, <span class="va">False</span>]</span>
@@ -501,11 +651,16 @@ window.Quarto = {
 <span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> x, y, z, d, sv <span class="kw">in</span> p_hacking_setup</span>
 <span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>p_hacking_results.write_csv(<span class="st">"results/tables/p_hacking_results.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><a href="#fig-nse" class="quarto-xref">Figure&nbsp;1</a> shows the distribution of the 96 value premium estimates, with the published Fama-French value factor marked as a vertical line.</p>
-<div id="cell-fig-nse" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p_hacking_nw <span class="op">=</span> p_hacking_results.<span class="bu">filter</span>(pl.col(<span class="st">"test"</span>) <span class="op">==</span> <span class="st">"Newey-West"</span>).with_columns(</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>p_hacking_results.write_csv(<span class="st">"results/tables/p_hacking_results.csv"</span>)</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+        </div>
+        <p><a href="#fig-nse" class="quarto-xref">Figure&nbsp;1</a> shows the distribution of the 96 value premium
+          estimates, with the published Fama-French value factor marked as a vertical line.</p>
+        <div id="cell-fig-nse" class="cell" data-execution_count="9">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb10">
+              <pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p_hacking_nw <span class="op">=</span> p_hacking_results.<span class="bu">filter</span>(pl.col(<span class="st">"test"</span>) <span class="op">==</span> <span class="st">"Newey-West"</span>).with_columns(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    is_significant<span class="op">=</span>pl.col(<span class="st">"t_stat"</span>).<span class="bu">abs</span>() <span class="op">&gt;=</span> <span class="fl">1.96</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -521,23 +676,35 @@ window.Quarto = {
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Value premiums across 96 specifications"</span>,</span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>fig_p_hacking_nw.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div id="fig-nse" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Histogram of value premium estimates across 96 specifications with a vertical reference line for the published HML factor.">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-nse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="replicating-the-value-factor_files/figure-html/fig-nse-output-1.png" alt="Histogram of value premium estimates across 96 specifications with a vertical reference line for the published HML factor." width="672" height="480" class="figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Distribution of the average value premium across 96 specifications. The vertical line marks the mean of the published Fama-French HML factor.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>As an optional addition, <a href="#fig-nse-capm" class="quarto-xref">Figure&nbsp;2</a> repeats the exercise with the CAPM-alphas of each specification, using the CAPM-alpha of the published HML factor as the reference line.</p>
-<div id="cell-fig-nse-capm" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p_hacking_capm <span class="op">=</span> p_hacking_results.<span class="bu">filter</span>(pl.col(<span class="st">"test"</span>) <span class="op">==</span> <span class="st">"CAPM-alpha"</span>).with_columns(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>fig_p_hacking_nw.show()</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+          <div class="cell-output cell-output-display">
+            <div id="fig-nse" class="quarto-float quarto-figure quarto-figure-center anchored"
+              alt="Histogram of value premium estimates across 96 specifications with a vertical reference line for the published HML factor.">
+              <figure class="quarto-float quarto-float-fig figure">
+                <div aria-describedby="fig-nse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+                  <img src="replicating-the-value-factor_files/figure-html/fig-nse-output-1.png"
+                    alt="Histogram of value premium estimates across 96 specifications with a vertical reference line for the published HML factor."
+                    width="672" height="480" class="figure-img">
+                </div>
+                <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig"
+                  id="fig-nse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+                  Figure&nbsp;1: Distribution of the average value premium across 96 specifications. The vertical line
+                  marks the mean of the published Fama-French HML factor.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <p>As an optional addition, <a href="#fig-nse-capm" class="quarto-xref">Figure&nbsp;2</a> repeats the exercise
+          with the CAPM-alphas of each specification, using the CAPM-alpha of the published HML factor as the reference
+          line.</p>
+        <div id="cell-fig-nse-capm" class="cell" data-execution_count="10">
+          <div class="code-copy-outer-scaffold">
+            <div class="sourceCode cell-code" id="cb11">
+              <pre
+                class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p_hacking_capm <span class="op">=</span> p_hacking_results.<span class="bu">filter</span>(pl.col(<span class="st">"test"</span>) <span class="op">==</span> <span class="st">"CAPM-alpha"</span>).with_columns(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    is_significant<span class="op">=</span>pl.col(<span class="st">"t_stat"</span>).<span class="bu">abs</span>() <span class="op">&gt;=</span> <span class="fl">1.96</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -560,281 +727,303 @@ Figure&nbsp;1: Distribution of the average value premium across 96 specification
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"CAPM-alphas of the value factor across 96 specifications"</span>,</span>
 <span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>fig_p_hacking_capm.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div id="fig-nse-capm" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Histogram of CAPM-alpha estimates across 96 specifications with a vertical reference line for the published HML factor's CAPM-alpha.">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-nse-capm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="replicating-the-value-factor_files/figure-html/fig-nse-capm-output-1.png" alt="Histogram of CAPM-alpha estimates across 96 specifications with a vertical reference line for the published HML factor's CAPM-alpha." width="672" height="480" class="figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nse-capm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Distribution of CAPM-alphas across 96 specifications. The vertical line marks the CAPM-alpha of the published Fama-French HML factor.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="discussion" class="level2">
-<h2 class="anchored" data-anchor-id="discussion">4. Discussion</h2>
-<p>In the first section, I rebuilt the class pipeline: the published FF5 factors come from <code>tf.download_data()</code> and are saved in a tidied, date-restricted version, while the synthetic CRSP and Compustat data are read from the cleaned files produced in the tutorials. In the second section, I applied the Fama-French timing convention to build the sorting variables, mapped monthly returns to the July-to-June period each sort governs, and computed the value premium under independent and dependent sorts. Both come out around 0.42 percent per month, close to the published HML average of 0.30 percent. In the third section, I extended the p-hacking grid with the independent versus dependent sorting choice and recomputed the premium across all 96 specifications.</p>
-<p>The distribution of estimates makes the main point of the exercise. The premium is positive in essentially every specification, but its magnitude varies substantially with choices that are all defensible ex ante, and only about three quarters of the specifications are significant at the 95 percent level. A single point estimate of the value premium therefore hides a lot of researcher degrees of freedom: two careful researchers using the same data could report noticeably different premiums, or disagree on its significance, simply because of design choices. The value premium looks like a real feature of the data, but any specific number for it should be read with the whole distribution in mind.</p>
-</section>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>fig_p_hacking_capm.show()</span></code></pre>
+            </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button>
+          </div>
+          <div class="cell-output cell-output-display">
+            <div id="fig-nse-capm" class="quarto-float quarto-figure quarto-figure-center anchored"
+              alt="Histogram of CAPM-alpha estimates across 96 specifications with a vertical reference line for the published HML factor's CAPM-alpha.">
+              <figure class="quarto-float quarto-float-fig figure">
+                <div aria-describedby="fig-nse-capm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+                  <img src="replicating-the-value-factor_files/figure-html/fig-nse-capm-output-1.png"
+                    alt="Histogram of CAPM-alpha estimates across 96 specifications with a vertical reference line for the published HML factor's CAPM-alpha."
+                    width="672" height="480" class="figure-img">
+                </div>
+                <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig"
+                  id="fig-nse-capm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+                  Figure&nbsp;2: Distribution of CAPM-alphas across 96 specifications. The vertical line marks the
+                  CAPM-alpha of the published Fama-French HML factor.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="discussion" class="level2">
+        <h2 class="anchored" data-anchor-id="discussion">4. Discussion</h2>
+        <p>In the first section, I rebuilt the class pipeline: the published FF5 factors come from
+          <code>tf.download_data()</code> and are saved in a tidied, date-restricted version, while the synthetic CRSP
+          and Compustat data are read from the cleaned files produced in the tutorials. In the second section, I applied
+          the Fama-French timing convention to build the sorting variables, mapped monthly returns to the July-to-June
+          period each sort governs, and computed the value premium under independent and dependent sorts. Both come out
+          around 0.42 percent per month, close to the published HML average of 0.30 percent. In the third section, I
+          extended the p-hacking grid with the independent versus dependent sorting choice and recomputed the premium
+          across all 96 specifications.</p>
+        <p>The distribution of estimates makes the main point of the exercise. The premium is positive in essentially
+          every specification, but its magnitude varies substantially with choices that are all defensible ex ante, and
+          only about three quarters of the specifications are significant at the 95 percent level. A single point
+          estimate of the value premium therefore hides a lot of researcher degrees of freedom: two careful researchers
+          using the same data could report noticeably different premiums, or disagree on its significance, simply
+          because of design choices. The value premium looks like a real feature of the data, but any specific number
+          for it should be read with the whole distribution in mind.</p>
+      </section>
 
-</main>
-<!-- /main column -->
-<script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
+    </main>
+    <!-- /main column -->
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const icon = "";
+        const anchorJS = new window.AnchorJS();
+        anchorJS.options = {
+          placement: 'right',
+          icon: icon
+        };
+        anchorJS.add('.anchored');
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {
+              return true;
+            }
+          }
+          return false;
         }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
+        const onCopySuccess = function (e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button,
+              {
+                trigger: "manual",
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]
+              });
+            tooltip.show();
+          }
+          setTimeout(function () {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
         }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const getTextToCopy = function (trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
         }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
+        var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
+        }
+        // Inspect non-navigation links and adorn them if external
+        var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i = 0; i < links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
           }
         }
-      }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
-        },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
-    }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function (el) {
+              return el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'quarto',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
           }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+          window.tippy(el, config);
         }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i = 0; i < noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function () {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch { }
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
             } else {
-              container.appendChild(child.cloneNode(true));
-              break;
+              return "";
             }
-          }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
-          }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
-          }
-          return note.innerHTML;
-        }
-      } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
-        }
-      }
-    }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
-        }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
-            }
-          } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
-            });
-          }
-        } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
-            if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
           });
         }
-      }, function(instance) {
-      });
-    }
+        const xrefs = window.document.querySelectorAll('a.quarto-xref');
+        const processXRef = (id, note) => {
+          // Strip column container classes
+          const stripColumnClz = (el) => {
+            el.classList.remove("page-full", "page-columns");
+            if (el.children) {
+              for (const child of el.children) {
+                stripColumnClz(child);
+              }
+            }
+          }
+          stripColumnClz(note)
+          if (id === null || id.startsWith('sec-')) {
+            // Special case sections, only their first couple elements
+            const container = document.createElement("div");
+            if (note.children && note.children.length > 2) {
+              container.appendChild(note.children[0].cloneNode(true));
+              for (let i = 1; i < note.children.length; i++) {
+                const child = note.children[i];
+                if (child.tagName === "P" && child.innerText === "") {
+                  continue;
+                } else {
+                  container.appendChild(child.cloneNode(true));
+                  break;
+                }
+              }
+              if (window.Quarto?.typesetMath) {
+                window.Quarto.typesetMath(container);
+              }
+              return container.innerHTML
+            } else {
+              if (window.Quarto?.typesetMath) {
+                window.Quarto.typesetMath(note);
+              }
+              return note.innerHTML;
+            }
+          } else {
+            // Remove any anchor links if they are present
+            const anchorLink = note.querySelector('a.anchorjs-link');
+            if (anchorLink) {
+              anchorLink.remove();
+            }
+            if (window.Quarto?.typesetMath) {
+              window.Quarto.typesetMath(note);
+            }
+            if (note.classList.contains("callout")) {
+              return note.outerHTML;
+            } else {
+              return note.innerHTML;
+            }
+          }
+        }
+        for (var i = 0; i < xrefs.length; i++) {
+          const xref = xrefs[i];
+          tippyHover(xref, undefined, function (instance) {
+            instance.disable();
+            let url = xref.getAttribute('href');
+            let hash = undefined;
+            if (url.startsWith('#')) {
+              hash = url;
+            } else {
+              try { hash = new URL(url).hash; } catch { }
+            }
+            if (hash) {
+              const id = hash.replace(/^#\/?/, "");
+              const note = window.document.getElementById(id);
+              if (note !== null) {
+                try {
+                  const html = processXRef(id, note.cloneNode(true));
+                  instance.setContent(html);
+                } finally {
+                  instance.enable();
+                  instance.show();
+                }
+              } else {
+                // See if we can fetch this
+                fetch(url.split('#')[0])
+                  .then(res => res.text())
+                  .then(html => {
+                    const parser = new DOMParser();
+                    const htmlDoc = parser.parseFromString(html, "text/html");
+                    const note = htmlDoc.getElementById(id);
+                    if (note !== null) {
+                      const html = processXRef(id, note);
+                      instance.setContent(html);
+                    }
+                  }).finally(() => {
+                    instance.enable();
+                    instance.show();
+                  });
+              }
+            } else {
+              // See if we can fetch a full url (with no hash to target)
+              // This is a special case and we should probably do some content thinning / targeting
+              fetch(url)
+                .then(res => res.text())
+                .then(html => {
+                  const parser = new DOMParser();
+                  const htmlDoc = parser.parseFromString(html, "text/html");
+                  const note = htmlDoc.querySelector('main.content');
+                  if (note !== null) {
+                    // This should only happen for chapter cross references
+                    // (since there is no id in the URL)
+                    // remove the first header
+                    if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                      note.children[0].remove();
+                    }
+                    const html = processXRef(null, note);
+                    instance.setContent(html);
+                  }
+                }).finally(() => {
+                  instance.enable();
+                  instance.show();
+                });
+            }
+          }, function (instance) {
+          });
+        }
         let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
+        const selectorForAnnotation = (cell, annotation) => {
           let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          let lineAttr = 'data-code-annotation="' + annotation + '"';
           const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
           return selector;
         }
@@ -851,11 +1040,11 @@ Figure&nbsp;2: Distribution of CAPM-alphas across 96 specifications. The vertica
           let height = null;
           let parent = null;
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
             if (lineIds.length > 1) {
               const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
               const bottom = lastEl.offsetTop + lastEl.offsetHeight;
@@ -898,32 +1087,32 @@ Figure&nbsp;2: Distribution of CAPM-alphas across 96 specifications. The vertica
           });
           selectedAnnoteEl = undefined;
         };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
+        // Handle positioning of the toggle
+        window.addEventListener(
+          "resize",
+          throttle(() => {
+            elRect = undefined;
+            if (selectedAnnoteEl) {
+              selectCodeLines(selectedAnnoteEl);
+            }
+          }, 10)
+        );
+        function throttle(fn, ms) {
+          let throttle = false;
+          let timer;
+          return (...args) => {
+            if (!throttle) { // first call gets through
               fn.apply(this, args);
               throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
+            } else { // all the others get throttled
+              if (timer) clearTimeout(timer); // cancel #2
               timer = setTimeout(() => {
                 fn.apply(this, args);
                 timer = throttle = false;
               }, ms);
-          }
-        };
-      }
+            }
+          };
+        }
         // Attach click handler to the DT
         const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
         for (const annoteDlNode of annoteDls) {
@@ -944,48 +1133,50 @@ Figure&nbsp;2: Distribution of CAPM-alphas across 96 specifications. The vertica
             }
           });
         }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
-      } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
             }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
-        });
-      }
-    }
-  });
-  </script>
-</div> <!-- /content -->
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i = 0; i < bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function () {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function (cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+    </script>
+  </div> <!-- /content -->
 
 
 
 
-</body></html>
+</body>
+
+</html>
