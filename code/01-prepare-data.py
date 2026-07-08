@@ -5,7 +5,7 @@ factors_ff5_monthly_raw = tf.download_data(
     dataset="Fama/French 5 Factors (2x3)",
 )
 
-factors_ff5_monthly_raw.write_parquet("data/raw/factors_ff5_monthly.parquet")
+factors_ff5_monthly_raw.write_parquet("data/raw/factors_ff5_monthly_raw.parquet")
 
 factors_ff5_monthly = factors_ff5_monthly_raw.filter(
     pl.col("date").dt.year().is_between(1970, 2025)
